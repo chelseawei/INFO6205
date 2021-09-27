@@ -12,23 +12,24 @@ public class InsertionSortTimer <X extends Comparable<X>> extends InsertionSort 
 //        final Timer timer2 = new Timer();
 //        final Timer timer3 = new Timer();
 //        final Timer timer4 = new Timer();
+        final int a = 58;
         final InsertionSortTimer ti = new InsertionSortTimer();
-        for(int n = 800; n < 13000; n *=2){
-             final Timer timer1 = new Timer();
-             final Timer timer2 = new Timer();
-             final Timer timer3 = new Timer();
-             final Timer timer4 = new Timer();
+        for(int n = 10000; n < 200000; n *=2){
+            Timer timer1 = new Timer();
+            Timer timer2 = new Timer();
+            Timer timer3 = new Timer();
+            Timer timer4 = new Timer();
             Integer[] randomArray = new Integer[n];
             for (int i = 0; i < randomArray.length; i++) {
                 randomArray[i] = (int)(Math.random() * 1000);
               
             }
-
-            double getRandomTime = timer1.repeat(10, () -> {
+            double getRandomTime = timer1.repeat(10,() -> a, t -> {
                 ti.sort(randomArray, 0, randomArray.length - 1);
                 return null;
-            });
-            System.out.println("当数组长度n=" + n + " randomArray排序的时间是" + getRandomTime + randomArray.length);
+            },(null),(null));
+            timer1.resume();
+            System.out.println("when n=" + n + " randomArray's time is " + getRandomTime);
 
 
 
@@ -36,12 +37,12 @@ public class InsertionSortTimer <X extends Comparable<X>> extends InsertionSort 
             for (int i = 0; i < orderedArray.length; i++) {
                 orderedArray[i] = i + 1;
             }
-            double getOrderedTime = timer2.repeat(10, () -> {
+            double getOrderedTime = timer2.repeat(10, () -> a, t -> {
                 ti.sort(orderedArray, 0, orderedArray.length - 1);
                 return null;
-            });
+            },(null),(null));
             timer2.resume();
-            System.out.println("当数组长度n=" + n + " orderedArray排序的时间是" + getOrderedTime );
+            System.out.println("when n=" + n + " orderedArray's time is " + getOrderedTime );
 
 
 
@@ -53,11 +54,12 @@ public class InsertionSortTimer <X extends Comparable<X>> extends InsertionSort 
                     partiallyOrdered[i] = (int)(Math.random() * 20000);
                 }
             }
-            double getPartiallyOrderedTime =   timer3.repeat(10,()->{
+            double getPartiallyOrderedTime =   timer3.repeat(10, () -> a, t ->{
                 ti.sort(partiallyOrdered,0,partiallyOrdered.length - 1);
                 return  null;
-            });
-            System.out.println("当数组长度n=" + n + " partiallyOrdered排序的时间是" + getPartiallyOrderedTime );
+            },(null),(null));
+            timer3.resume();
+            System.out.println("when n=" + n + " partiallyOrdered's time is " + getPartiallyOrderedTime );
 
 
 
@@ -65,10 +67,11 @@ public class InsertionSortTimer <X extends Comparable<X>> extends InsertionSort 
             for(int i = 0; i < reverseOrderedArray.length; i++) {
                 reverseOrderedArray[i] = n - i;
             }
-            double getReverseOrderedArrayTime = timer4.repeat(10,() ->{ti.sort(reverseOrderedArray, 0,reverseOrderedArray.length - 1);
+            double getReverseOrderedArrayTime = timer4.repeat(10,() -> a,t ->{ti.sort(reverseOrderedArray, 0,reverseOrderedArray.length - 1);
                 return null;
-            });
-            System.out.println("当数组长度n=" + n +" reverseOrderedArray排序的时间是" + getReverseOrderedArrayTime);
+            },(null),(null));
+            timer4.resume();
+            System.out.println("when n=" + n +" reverseOrderedArray's time is " + getReverseOrderedArrayTime);
 
 
         }

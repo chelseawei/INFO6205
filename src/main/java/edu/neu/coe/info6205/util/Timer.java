@@ -21,15 +21,15 @@ public class Timer {
      * @param function a function which yields a T (T may be Void).
      * @return the average milliseconds per repetition.
      */
-//    public <T> double repeat(int n, Supplier<T> function) {
-//        for (int i = 0; i < n; i++) {
-//            function.get();
-//            lap();
-//        }
-//        pause();
-//        return meanLapTime();
-//    }
     public <T> double repeat(int n, Supplier<T> function) {
+        for (int i = 0; i < n; i++) {
+            function.get();
+            lap();
+        }
+        pause();
+        return meanLapTime();
+    }
+    public <T> double repeat1(int n, Supplier<T> function) {
         for (int i = 0; i < n; i++) {
             function.get();
             lap();
