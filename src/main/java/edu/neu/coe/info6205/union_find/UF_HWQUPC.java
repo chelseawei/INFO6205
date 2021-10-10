@@ -8,11 +8,49 @@
 package edu.neu.coe.info6205.union_find;
 
 import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
 
 /**
  * Height-weighted Quick Union with Path Compression
  */
 public class UF_HWQUPC implements UF {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int k = 10;
+        while(k>0) {
+            System.out.print("enter n: ");
+            int n = input.nextInt();
+            System.out.println("number of connections: " + count(n)[0] + "    number of unions: " + count(n)[1]);
+            k--;
+        }
+
+
+    }
+    public static int[] count(int n) {
+        int[] res = new int[2];
+        int number = 0;
+        int unionNUmber = 0;
+        Random random = new Random();
+        UF_HWQUPC obj = new UF_HWQUPC(n,true);
+        while(obj.count != 1) {
+            int p = random.nextInt(n);
+            int q = random.nextInt(n);
+            if(obj.connected(p,q)) {
+                number ++;
+                continue;
+            }else{
+                obj.union(p,q);
+                number ++;
+                unionNUmber++;
+            }
+        }
+        res[0] = number;
+        res[1] = unionNUmber;
+        return res;
+
+    }
+
     /**
      * Ensure that site p is connected to site q,
      *
@@ -80,8 +118,14 @@ public class UF_HWQUPC implements UF {
      */
     public int find(int p) {
         validate(p);
-        int root = p;
         // TO BE IMPLEMENTED
+        int root = p;
+        while(root != parent[root]) {
+            if(pathCompression) {
+                doPathCompression(root);
+            }
+            root = getParent(root);
+        }
         return root;
     }
 
@@ -112,6 +156,12 @@ public class UF_HWQUPC implements UF {
         // CONSIDER can we avoid doing find again?
         mergeComponents(find(p), find(q));
         count--;
+//        if(count == 1) {
+//            for(int i = 0; i < size(); i++) {
+//                doPathCompression(i);
+//            }
+//
+//        }
     }
 
     @Override
@@ -169,6 +219,39 @@ public class UF_HWQUPC implements UF {
 
     private void mergeComponents(int i, int j) {
         // TO BE IMPLEMENTED make shorter root point to taller one
+        int first = find(i);
+        int second = find(j);
+        if(first == second) {
+            return;
+        }
+        if(height[first] >= height[second]) {
+            parent[second] = first;
+            height[first] += height[second];
+        }
+        else {
+            parent[first] = second;
+            height[second] += height[first];
+        }
+//
+
+//        int count1 = 0;
+//        int count2 = 0;
+//        for(int k = 0; k < size(); k++) {
+//            if(parent[k] == first) {
+//                count1 ++;
+//            }else if(parent[k] == second) {
+//                count2 ++;
+//            }
+//
+//        }
+//        if(count1 < count2) {
+//            parent[i] = second;
+//            //height[j] += height[i];
+//        }
+//        else if(count1 > count2) {
+//            parent[j] = first;
+//            //height[i] += height[j];
+//        }
     }
 
     /**
@@ -176,5 +259,9 @@ public class UF_HWQUPC implements UF {
      */
     private void doPathCompression(int i) {
         // TO BE IMPLEMENTED update parent to value of grandparent
+
+        parent[i] = getParent(getParent(i));
+
     }
+
 }
