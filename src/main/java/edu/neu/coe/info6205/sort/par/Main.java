@@ -18,25 +18,33 @@ public class Main {
 
     public static void main(String[] args) {
         processArgs(args);
-        System.out.println("Degree of parallelism: " + ForkJoinPool.getCommonPoolParallelism());
+        int threadCount = 8;
+        ForkJoinPool myPool = new ForkJoinPool(threadCount);
+        //System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "4");
+        //System.out.println("Degree of parallelism: " + ForkJoinPool.getCommonPoolParallelism());
+        System.out.println("Degree of parallelism: " + myPool.getParallelism());
         Random random = new Random();
         int[] array = new int[2000000];
+        System.out.println("Array length: " + array.length);
         ArrayList<Long> timeList = new ArrayList<>();
-        for (int j = 50; j < 100; j++) {
-            ParSort.cutoff = 10000 * (j + 1);
-            // for (int i = 0; i < array.length; i++) array[i] = random.nextInt(10000000);
+        int num = 0;
+        for (int j = 20; j < 110; j++) {
+//        for(int j = (array.length); j > 1000; j /= 2){
+            ParSort.cutoff = 10000 * (j);
+//            ParSort.cutoff = j;
+            num++;
             long time;
             long startTime = System.currentTimeMillis();
             for (int t = 0; t < 10; t++) {
                 for (int i = 0; i < array.length; i++) array[i] = random.nextInt(10000000);
-                ParSort.sort(array, 0, array.length);
+                ParSort.sort(array, 0, array.length,myPool);
             }
             long endTime = System.currentTimeMillis();
             time = (endTime - startTime);
             timeList.add(time);
 
 
-            System.out.println("cutoff：" + (ParSort.cutoff) + "\t\t10times Time:" + time + "ms");
+            System.out.println("cutoff：" + (ParSort.cutoff) + "\t\t10times Time:" + time + "ms"  );
 
         }
         try {
